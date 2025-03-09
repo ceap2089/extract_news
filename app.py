@@ -1,8 +1,18 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import requests
 from bs4 import BeautifulSoup
 
 app = Flask(__name__)
+CORS(app)  # Habilita CORS para permitir peticiones desde GitHub Pages
+
+@app.route("/extraer", methods=["POST"])
+def extraer():
+    data = request.json
+    url = data.get("url", "")
+    
+    titulo, contenido = obtener_contenido_noticia(url)
+    return jsonify({"titulo": titulo, "contenido": contenido})
 
 def obtener_contenido_noticia(url):
     headers = {"User-Agent": "Mozilla/5.0"}
@@ -18,16 +28,9 @@ def obtener_contenido_noticia(url):
             contenido = '\n'.join(p.get_text(strip=True) for p in parrafos)
             return titulo, contenido
         else:
-            return None, 'No se encontró el contenido del artículo.'
+            return "No encontrado", "No se encontró el contenido del artículo."
     else:
-        return None, f'Error {response.status_code}'
-
-@app.route("/extraer", methods=["POST"])
-def extraer():
-    data = request.json
-    url = data.get("url", "")
-    titulo, contenido = obtener_contenido_noticia(url)
-    return jsonify({"titulo": titulo, "contenido": contenido})
+        return "Error", f"Error {response.status_code}"
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))  # Configura el puerto dinámicamente

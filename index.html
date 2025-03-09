@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Extraer Noticias</title>
+</head>
+<body>
+    <h1>Extraer Noticias</h1>
+    <input type="text" id="news-url" placeholder="Ingresa la URL de la noticia">
+    <button onclick="extraerNoticia()">Obtener Noticia</button>
+    <h2>Título:</h2>
+    <p id="titulo"></p>
+    <h2>Contenido:</h2>
+    <p id="contenido"></p>
+
+    <script>
+        async function extraerNoticia() {
+            let url = document.getElementById("news-url").value;
+            let response = await fetch("https://TU-BACKEND-AQUI.onrender.com/extraer", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ url: url })
+            });
+            let data = await response.json();
+            document.getElementById("titulo").innerText = data.titulo;
+            document.getElementById("contenido").innerText = data.contenido;
+        }
+    </script>
+</body>
+</html>

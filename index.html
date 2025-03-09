@@ -17,7 +17,7 @@
     <script>
         async function extraerNoticia() {
             let url = document.getElementById("news-url").value;
-            let response = await fetch("https://extract-news.onrender.com", {
+            let response = await fetch("https://extract-news.onrender.com/extraer", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ url: url })
